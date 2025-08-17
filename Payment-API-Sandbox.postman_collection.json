@@ -1,0 +1,82 @@
+{
+  "info": {
+    "name": "Payment API Sandbox",
+    "description": "Postman collection for local testing of PayPal and Alipay sandbox endpoints.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "item": [
+    {
+      "name": "Create PayPal Order",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"scenario\": \"success\",\n  \"amount\": 100.0,\n  \"provider\": \"paypal\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/order/paypal",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "order", "paypal"]
+        }
+      }
+    },
+    {
+      "name": "Create Alipay Order",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"scenario\": \"success\",\n  \"amount\": 200.0,\n  \"provider\": \"alipay\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/order/alipay",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "order", "alipay"]
+        }
+      }
+    },
+    {
+      "name": "Auth Order (Notification)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"amount\": 1000.0,\n  \"provider\": \"paypal\",\n  \"orderId\": \"PAYPAL-123456\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/order/auth",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "order", "auth"]
+        }
+      }
+    },
+    {
+      "name": "Auth Order (Normal)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"amount\": 100.0,\n  \"provider\": \"paypal\",\n  \"orderId\": \"PAYPAL-123456\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/order/auth",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "order", "auth"]
+        }
+      }
+    }
+  ]
+}

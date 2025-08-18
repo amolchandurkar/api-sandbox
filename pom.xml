@@ -14,6 +14,12 @@
         <spring.boot.version>3.2.0</spring.boot.version>
     </properties>
     <dependencies>
+        <!-- Logback for SLF4J binding -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.4.14</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -25,11 +31,24 @@
             <version>${spring.boot.version}</version>
             <scope>test</scope>
         </dependency>
-        <!-- Mockito for unit testing -->
+        <!-- Mockito for unit testing (Java 21 compatible) -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>5.2.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-inline</artifactId>
+            <version>5.2.0</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- Byte Buddy for Java 21 compatibility -->
+        <dependency>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy</artifactId>
+            <version>1.14.14</version>
             <scope>test</scope>
         </dependency>
         <!-- JUnit Jupiter for modern unit tests -->

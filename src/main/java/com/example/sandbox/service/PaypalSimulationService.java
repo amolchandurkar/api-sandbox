@@ -1,5 +1,8 @@
 package com.example.sandbox.service;
 
+import com.example.sandbox.util.SandboxConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -13,6 +16,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Service
 public class PaypalSimulationService {
+    private static final Logger logger = LoggerFactory.getLogger(PaypalSimulationService.class);
     /**
      * Get scenario-based amount for PayPal.
      * @param request JSON payload with scenario field
@@ -20,12 +24,16 @@ public class PaypalSimulationService {
      */
     public double getAmountForScenario(Map<String, Object> request) {
         String scenario = (String) request.getOrDefault("scenario", "default");
+        logger.info(SandboxConstants.LOG_PREFIX + "PayPal scenario: {}", scenario);
+        double amount;
         switch (scenario) {
-            case "success": return 100.0;
-            case "failure": return 0.0;
-            case "pending": return 50.0;
-            default: return 10.0;
+            case "success": amount = 100.0; break;
+            case "failure": amount = 0.0; break;
+            case "pending": amount = 50.0; break;
+            default: amount = 10.0; break;
         }
+        logger.info(SandboxConstants.LOG_PREFIX + "PayPal scenario amount: {}", amount);
+        return amount;
     }
 
     /**
@@ -37,8 +45,11 @@ public class PaypalSimulationService {
         if (delayObj != null) {
             try {
                 long delay = Long.parseLong(delayObj.toString());
+                logger.info(SandboxConstants.LOG_PREFIX + "Delaying PayPal response by {} ms", delay);
                 TimeUnit.MILLISECONDS.sleep(delay);
-            } catch (Exception ignored) {}
+            } catch (Exception e) {
+                logger.warn(SandboxConstants.LOG_PREFIX + "Failed to delay PayPal response: {}", e.getMessage());
+            }
         }
     }
 }

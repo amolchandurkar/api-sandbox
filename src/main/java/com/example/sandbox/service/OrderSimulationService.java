@@ -1,5 +1,8 @@
 package com.example.sandbox.service;
 
+import com.example.sandbox.util.SandboxConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 @Service
 public class OrderSimulationService {
+    private static final Logger logger = LoggerFactory.getLogger(OrderSimulationService.class);
     @Autowired
     private PaypalSimulationService paypalService;
     @Autowired
@@ -29,11 +33,17 @@ public class OrderSimulationService {
      * @return Simulated amount for the scenario
      */
     public double getAmountForScenario(Map<String, Object> request, String provider) {
-        if (provider.equals("paypal")) {
-            return paypalService.getAmountForScenario(request);
-        } else if (provider.equals("alipay")) {
-            return alipayService.getAmountForScenario(request);
+        logger.info(SandboxConstants.LOG_PREFIX + "Getting amount for provider: {} with request: {}", provider, request);
+        if (provider.equals(SandboxConstants.PROVIDER_PAYPAL)) {
+            double amt = paypalService.getAmountForScenario(request);
+            logger.info(SandboxConstants.LOG_PREFIX + "PayPal scenario amount: {}", amt);
+            return amt;
+        } else if (provider.equals(SandboxConstants.PROVIDER_ALIPAY)) {
+            double amt = alipayService.getAmountForScenario(request);
+            logger.info(SandboxConstants.LOG_PREFIX + "Alipay scenario amount: {}", amt);
+            return amt;
         }
+        logger.warn(SandboxConstants.LOG_PREFIX + "Unknown provider: {}", provider);
         return 0.0;
     }
 
@@ -43,10 +53,16 @@ public class OrderSimulationService {
      * @param request JSON payload with delayMs field
      */
     public void maybeDelay(Map<String, Object> request) {
-        if (request.getOrDefault("provider", "paypal").equals("paypal")) {
+        String provider = request.getOrDefault("provider", SandboxConstants.PROVIDER_PAYPAL).toString();
+        logger.info(SandboxConstants.LOG_PREFIX + "Checking for delay for provider: {} with request: {}", provider, request);
+        if (provider.equals(SandboxConstants.PROVIDER_PAYPAL)) {
             paypalService.maybeDelay(request);
-        } else if (request.getOrDefault("provider", "alipay").equals("alipay")) {
+            logger.info(SandboxConstants.LOG_PREFIX + "Delay handled by PayPalSimulationService");
+        } else if (provider.equals(SandboxConstants.PROVIDER_ALIPAY)) {
             alipayService.maybeDelay(request);
+            logger.info(SandboxConstants.LOG_PREFIX + "Delay handled by AlipaySimulationService");
+        } else {
+            logger.warn(SandboxConstants.LOG_PREFIX + "Unknown provider for delay: {}", provider);
         }
     }
 
@@ -56,22 +72,25 @@ public class OrderSimulationService {
      * @return Map with authorization response and optional notification
      */
     public Map<String, Object> buildAuthResponse(Map<String, Object> request) {
+        logger.info(SandboxConstants.LOG_PREFIX + "Building auth response for request: {}", request);
         double amount = request.get("amount") != null ? Double.parseDouble(request.get("amount").toString()) : 0.0;
         Map<String, Object> response = Map.of(
             "provider", request.getOrDefault("provider", "unknown"),
             "orderId", request.getOrDefault("orderId", "AUTH-" + System.currentTimeMillis()),
             "amount", amount,
-            "status", "AUTHORIZED"
+            "status", SandboxConstants.STATUS_AUTHORIZED
         );
         if (amount == 1000.0) {
+            logger.info(SandboxConstants.LOG_PREFIX + "Order amount is 1000, adding notification to response.");
             return Map.of(
                 "authResponse", response,
                 "notification", Map.of(
-                    "type", "ORDER_AUTH_NOTIFICATION",
+                    "type", SandboxConstants.NOTIFICATION_TYPE,
                     "message", "Order of 1000 authorized, notification sent"
                 )
             );
         }
+        logger.info(SandboxConstants.LOG_PREFIX + "Returning normal auth response: {}", response);
         return response;
     }
 }

@@ -1,5 +1,8 @@
 package com.example.sandbox.service;
 
+import com.example.sandbox.util.SandboxConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -13,6 +16,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Service
 public class AlipaySimulationService {
+    private static final Logger logger = LoggerFactory.getLogger(AlipaySimulationService.class);
     /**
      * Get scenario-based amount for Alipay.
      * @param request JSON payload with scenario field
@@ -20,12 +24,16 @@ public class AlipaySimulationService {
      */
     public double getAmountForScenario(Map<String, Object> request) {
         String scenario = (String) request.getOrDefault("scenario", "default");
+        logger.info(SandboxConstants.LOG_PREFIX + "Alipay scenario: {}", scenario);
+        double amount;
         switch (scenario) {
-            case "success": return 200.0;
-            case "failure": return 0.0;
-            case "pending": return 75.0;
-            default: return 20.0;
+            case "success": amount = 200.0; break;
+            case "failure": amount = 0.0; break;
+            case "pending": amount = 75.0; break;
+            default: amount = 20.0; break;
         }
+        logger.info(SandboxConstants.LOG_PREFIX + "Alipay scenario amount: {}", amount);
+        return amount;
     }
 
     /**
@@ -37,8 +45,11 @@ public class AlipaySimulationService {
         if (delayObj != null) {
             try {
                 long delay = Long.parseLong(delayObj.toString());
+                logger.info(SandboxConstants.LOG_PREFIX + "Delaying Alipay response by {} ms", delay);
                 TimeUnit.MILLISECONDS.sleep(delay);
-            } catch (Exception ignored) {}
+            } catch (Exception e) {
+                logger.warn(SandboxConstants.LOG_PREFIX + "Failed to delay Alipay response: {}", e.getMessage());
+            }
         }
     }
 }

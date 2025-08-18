@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import java.util.Map;
 import com.example.sandbox.service.OrderSimulationService;
+import com.example.sandbox.util.SandboxConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * OrderController exposes REST endpoints for simulating merchant payment order flows.
@@ -33,6 +36,8 @@ import com.example.sandbox.service.OrderSimulationService;
 @RestController
 @RequestMapping("/api/order")
 public class OrderController {
+    private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
+
     @Autowired
     private OrderSimulationService simulationService;
 
@@ -43,14 +48,20 @@ public class OrderController {
      */
     @PostMapping("/paypal")
     public ResponseEntity<Map<String, Object>> createPaypalOrder(@RequestBody Map<String, Object> request) {
-        double amount = simulationService.getAmountForScenario(request, "paypal");
+        logger.info(SandboxConstants.LOG_PREFIX + "Received PayPal order request: {}", request);
+        double amount = simulationService.getAmountForScenario(request, SandboxConstants.PROVIDER_PAYPAL);
+        logger.info(SandboxConstants.LOG_PREFIX + "Calculated PayPal order amount: {}", amount);
         simulationService.maybeDelay(request);
-        return ResponseEntity.ok(Map.of(
-            "provider", "paypal",
-            "orderId", "PAYPAL-" + System.currentTimeMillis(),
+        String orderId = "PAYPAL-" + System.currentTimeMillis();
+        logger.info(SandboxConstants.LOG_PREFIX + "Generated PayPal orderId: {}", orderId);
+        Map<String, Object> response = Map.of(
+            "provider", SandboxConstants.PROVIDER_PAYPAL,
+            "orderId", orderId,
             "amount", amount,
-            "status", "CREATED"
-        ));
+            "status", SandboxConstants.STATUS_CREATED
+        );
+        logger.info(SandboxConstants.LOG_PREFIX + "Responding to PayPal order request: {}", response);
+        return ResponseEntity.ok(response);
     }
 
     /**
@@ -60,14 +71,20 @@ public class OrderController {
      */
     @PostMapping("/alipay")
     public ResponseEntity<Map<String, Object>> createAlipayOrder(@RequestBody Map<String, Object> request) {
-        double amount = simulationService.getAmountForScenario(request, "alipay");
+        logger.info(SandboxConstants.LOG_PREFIX + "Received Alipay order request: {}", request);
+        double amount = simulationService.getAmountForScenario(request, SandboxConstants.PROVIDER_ALIPAY);
+        logger.info(SandboxConstants.LOG_PREFIX + "Calculated Alipay order amount: {}", amount);
         simulationService.maybeDelay(request);
-        return ResponseEntity.ok(Map.of(
-            "provider", "alipay",
-            "orderId", "ALIPAY-" + System.currentTimeMillis(),
+        String orderId = "ALIPAY-" + System.currentTimeMillis();
+        logger.info(SandboxConstants.LOG_PREFIX + "Generated Alipay orderId: {}", orderId);
+        Map<String, Object> response = Map.of(
+            "provider", SandboxConstants.PROVIDER_ALIPAY,
+            "orderId", orderId,
             "amount", amount,
-            "status", "CREATED"
-        ));
+            "status", SandboxConstants.STATUS_CREATED
+        );
+        logger.info(SandboxConstants.LOG_PREFIX + "Responding to Alipay order request: {}", response);
+        return ResponseEntity.ok(response);
     }
 
     /**
@@ -78,8 +95,11 @@ public class OrderController {
      */
     @PostMapping("/auth")
     public ResponseEntity<Map<String, Object>> authOrder(@RequestBody Map<String, Object> request) {
+        logger.info(SandboxConstants.LOG_PREFIX + "Received auth order request: {}", request);
         simulationService.maybeDelay(request);
-        return ResponseEntity.ok(simulationService.buildAuthResponse(request));
+        Map<String, Object> response = simulationService.buildAuthResponse(request);
+        logger.info(SandboxConstants.LOG_PREFIX + "Responding to auth order request: {}", response);
+        return ResponseEntity.ok(response);
     }
 
     // Business logic moved to OrderSimulationService

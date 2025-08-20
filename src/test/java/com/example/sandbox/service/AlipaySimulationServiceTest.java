@@ -10,30 +10,36 @@ class AlipaySimulationServiceTest {
     private final AlipaySimulationService service = new AlipaySimulationService();
 
     @Test
-    void testGetAmountForScenarioSuccess() {
+    void testGetScenarioForAmountSuccess10() {
         Map<String, Object> req = new HashMap<>();
-        req.put("scenario", "success");
-        assertEquals(200.0, service.getAmountForScenario(req));
+        req.put("amount", 10.0);
+        assertEquals("success", service.getScenarioForAmount(req));
     }
 
     @Test
-    void testGetAmountForScenarioFailure() {
+    void testGetScenarioForAmountFailure20() {
         Map<String, Object> req = new HashMap<>();
-        req.put("scenario", "failure");
-        assertEquals(0.0, service.getAmountForScenario(req));
+        req.put("amount", 20.0);
+        assertEquals("failure", service.getScenarioForAmount(req));
     }
 
     @Test
-    void testGetAmountForScenarioPending() {
+    void testGetScenarioForAmountPending30() {
         Map<String, Object> req = new HashMap<>();
-        req.put("scenario", "pending");
-        assertEquals(75.0, service.getAmountForScenario(req));
+        req.put("amount", 30.0);
+        assertEquals("pending", service.getScenarioForAmount(req));
     }
 
     @Test
-    void testGetAmountForScenarioDefault() {
+    void testGetScenarioForAmountOtherAmount() {
         Map<String, Object> req = new HashMap<>();
-        req.put("scenario", "other");
-        assertEquals(20.0, service.getAmountForScenario(req));
+        req.put("amount", 99.0);
+        assertEquals("success", service.getScenarioForAmount(req));
+    }
+
+    @Test
+    void testGetScenarioForAmountDefaultAmount() {
+        Map<String, Object> req = new HashMap<>();
+        assertEquals("success", service.getScenarioForAmount(req));
     }
 }

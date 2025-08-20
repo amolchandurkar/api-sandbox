@@ -23,8 +23,8 @@ public class PaymentApiSandboxApplicationTests {
             .content("{\"scenario\":\"success\"}")
     )
         .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.status().isOk())
-        .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath("$.provider").value("paypal"))
-        .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath("$.amount").value(100.0));
+    .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath("$.provider").value("paypal"))
+    .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath("$.scenario").value("success"));
     }
 
     @Test
@@ -32,10 +32,10 @@ public class PaymentApiSandboxApplicationTests {
     mockMvc.perform(
         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/order/alipay")
             .contentType(MediaType.APPLICATION_JSON)
-            .content("{\"scenario\":\"pending\"}")
+            .content("{\"amount\":10.0}")
     )
         .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.status().isOk())
-        .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath("$.provider").value("alipay"))
-        .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath("$.amount").value(75.0));
+    .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath("$.provider").value("alipay"))
+    .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath("$.scenario").value("success"));
     }
 }

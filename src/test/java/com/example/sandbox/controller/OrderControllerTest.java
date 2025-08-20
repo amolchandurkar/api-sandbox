@@ -24,38 +24,38 @@ class OrderControllerTest {
 
     /**
      * Test PayPal order creation endpoint.
-     * Verifies that the controller delegates to the service and returns the correct provider and amount.
+     * Verifies that the controller delegates to the service and returns the correct provider and scenario.
      */
     @Test
     void testCreatePaypalOrder() {
         Map<String, Object> req = new HashMap<>();
-        // Simulate service returning amount for PayPal scenario
-        when(simulationService.getAmountForScenario(req, "paypal")).thenReturn(100.0);
+        // Simulate service returning scenario for PayPal
+        when(simulationService.getScenarioForProvider(req, "paypal")).thenReturn("success");
         // Simulate no delay for this request
         doNothing().when(simulationService).maybeDelay(req);
         // Call controller endpoint
         ResponseEntity<Map<String, Object>> resp = controller.createPaypalOrder(req);
-        // Assert provider and amount in response
+        // Assert provider and scenario in response
         assertEquals("paypal", resp.getBody().get("provider"));
-        assertEquals(100.0, resp.getBody().get("amount"));
+        assertEquals("success", resp.getBody().get("scenario"));
     }
 
     /**
      * Test Alipay order creation endpoint.
-     * Verifies that the controller delegates to the service and returns the correct provider and amount.
+     * Verifies that the controller delegates to the service and returns the correct provider and scenario.
      */
     @Test
     void testCreateAlipayOrder() {
         Map<String, Object> req = new HashMap<>();
-        // Simulate service returning amount for Alipay scenario
-        when(simulationService.getAmountForScenario(req, "alipay")).thenReturn(200.0);
+        // Simulate service returning scenario for Alipay
+        when(simulationService.getScenarioForProvider(req, "alipay")).thenReturn("failure");
         // Simulate no delay for this request
         doNothing().when(simulationService).maybeDelay(req);
         // Call controller endpoint
         ResponseEntity<Map<String, Object>> resp = controller.createAlipayOrder(req);
-        // Assert provider and amount in response
+        // Assert provider and scenario in response
         assertEquals("alipay", resp.getBody().get("provider"));
-        assertEquals(200.0, resp.getBody().get("amount"));
+        assertEquals("failure", resp.getBody().get("scenario"));
     }
 
     /**

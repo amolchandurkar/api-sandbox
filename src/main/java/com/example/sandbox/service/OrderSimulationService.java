@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * Handles authorization response and notification logic for special cases.
  * <p>
  * Usage:
- *   - getAmountForScenario: Returns scenario-based amount for a provider.
+ *   - getScenarioForProvider: Returns scenario string for a provider.
  *   - maybeDelay: Simulates delayed responses for edge cases.
  *   - buildAuthResponse: Returns authorization response, with notification for amount 1000.
  */
@@ -27,24 +27,24 @@ public class OrderSimulationService {
     private AlipaySimulationService alipayService;
 
     /**
-     * Get scenario-based amount for a payment provider.
-     * @param request JSON payload with scenario and details
+     * Get scenario string for a payment provider.
+     * @param request JSON payload with amount and details
      * @param provider Payment provider (paypal, alipay)
-     * @return Simulated amount for the scenario
+     * @return Scenario string for the amount
      */
-    public double getAmountForScenario(Map<String, Object> request, String provider) {
-        logger.info(SandboxConstants.LOG_PREFIX + "Getting amount for provider: {} with request: {}", provider, request);
+    public String getScenarioForProvider(Map<String, Object> request, String provider) {
+        logger.info(SandboxConstants.LOG_PREFIX + "Getting scenario for provider: {} with request: {}", provider, request);
         if (provider.equals(SandboxConstants.PROVIDER_PAYPAL)) {
-            double amt = paypalService.getAmountForScenario(request);
-            logger.info(SandboxConstants.LOG_PREFIX + "PayPal scenario amount: {}", amt);
-            return amt;
+            String scenario = paypalService.getScenarioForAmount(request);
+            logger.info(SandboxConstants.LOG_PREFIX + "PayPal scenario: {}", scenario);
+            return scenario;
         } else if (provider.equals(SandboxConstants.PROVIDER_ALIPAY)) {
-            double amt = alipayService.getAmountForScenario(request);
-            logger.info(SandboxConstants.LOG_PREFIX + "Alipay scenario amount: {}", amt);
-            return amt;
+            String scenario = alipayService.getScenarioForAmount(request);
+            logger.info(SandboxConstants.LOG_PREFIX + "Alipay scenario: {}", scenario);
+            return scenario;
         }
         logger.warn(SandboxConstants.LOG_PREFIX + "Unknown provider: {}", provider);
-        return 0.0;
+        return "unknown";
     }
 
     /**

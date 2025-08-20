@@ -1,4 +1,3 @@
-
 package com.example.sandbox.controller;
 
 import org.springframework.web.bind.annotation.RestController;
@@ -49,15 +48,15 @@ public class OrderController {
     @PostMapping("/paypal")
     public ResponseEntity<Map<String, Object>> createPaypalOrder(@RequestBody Map<String, Object> request) {
         logger.info(SandboxConstants.LOG_PREFIX + "Received PayPal order request: {}", request);
-        double amount = simulationService.getAmountForScenario(request, SandboxConstants.PROVIDER_PAYPAL);
-        logger.info(SandboxConstants.LOG_PREFIX + "Calculated PayPal order amount: {}", amount);
+        String scenario = simulationService.getScenarioForProvider(request, SandboxConstants.PROVIDER_PAYPAL);
+        logger.info(SandboxConstants.LOG_PREFIX + "Calculated PayPal scenario: {}", scenario);
         simulationService.maybeDelay(request);
         String orderId = "PAYPAL-" + System.currentTimeMillis();
         logger.info(SandboxConstants.LOG_PREFIX + "Generated PayPal orderId: {}", orderId);
         Map<String, Object> response = Map.of(
             "provider", SandboxConstants.PROVIDER_PAYPAL,
             "orderId", orderId,
-            "amount", amount,
+            "scenario", scenario,
             "status", SandboxConstants.STATUS_CREATED
         );
         logger.info(SandboxConstants.LOG_PREFIX + "Responding to PayPal order request: {}", response);
@@ -72,15 +71,15 @@ public class OrderController {
     @PostMapping("/alipay")
     public ResponseEntity<Map<String, Object>> createAlipayOrder(@RequestBody Map<String, Object> request) {
         logger.info(SandboxConstants.LOG_PREFIX + "Received Alipay order request: {}", request);
-        double amount = simulationService.getAmountForScenario(request, SandboxConstants.PROVIDER_ALIPAY);
-        logger.info(SandboxConstants.LOG_PREFIX + "Calculated Alipay order amount: {}", amount);
+        String scenario = simulationService.getScenarioForProvider(request, SandboxConstants.PROVIDER_ALIPAY);
+        logger.info(SandboxConstants.LOG_PREFIX + "Calculated Alipay scenario: {}", scenario);
         simulationService.maybeDelay(request);
         String orderId = "ALIPAY-" + System.currentTimeMillis();
         logger.info(SandboxConstants.LOG_PREFIX + "Generated Alipay orderId: {}", orderId);
         Map<String, Object> response = Map.of(
             "provider", SandboxConstants.PROVIDER_ALIPAY,
             "orderId", orderId,
-            "amount", amount,
+            "scenario", scenario,
             "status", SandboxConstants.STATUS_CREATED
         );
         logger.info(SandboxConstants.LOG_PREFIX + "Responding to Alipay order request: {}", response);

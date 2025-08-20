@@ -11,29 +11,39 @@ import java.util.concurrent.TimeUnit;
  * AlipaySimulationService simulates Alipay payment scenarios and delayed responses.
  * <p>
  * Usage:
- *   - getAmountForScenario: Returns scenario-based amount for Alipay.
+ *   - getScenarioForAmount: Returns scenario string for Alipay based on amount.
  *   - maybeDelay: Simulates delayed response if delayMs is provided.
  */
 @Service
 public class AlipaySimulationService {
     private static final Logger logger = LoggerFactory.getLogger(AlipaySimulationService.class);
     /**
-     * Get scenario-based amount for Alipay.
-     * @param request JSON payload with scenario field
-     * @return Simulated amount for the scenario
+     * Get scenario string for Alipay based on amount.
+     * @param request JSON payload with amount field
+     * @return Scenario string (10=success, 20=failure, 30=pending, other=success)
      */
-    public double getAmountForScenario(Map<String, Object> request) {
-        String scenario = (String) request.getOrDefault("scenario", "default");
-        logger.info(SandboxConstants.LOG_PREFIX + "Alipay scenario: {}", scenario);
-        double amount;
-        switch (scenario) {
-            case "success": amount = 200.0; break;
-            case "failure": amount = 0.0; break;
-            case "pending": amount = 75.0; break;
-            default: amount = 20.0; break;
+    public String getScenarioForAmount(Map<String, Object> request) {
+        double amount = 10.0;
+        if (request.containsKey("amount")) {
+            Object amtObj = request.get("amount");
+            try {
+                amount = Double.parseDouble(amtObj.toString());
+            } catch (Exception e) {
+                logger.warn(SandboxConstants.LOG_PREFIX + "Invalid amount, defaulting to 10.0: {}", amtObj);
+            }
         }
-        logger.info(SandboxConstants.LOG_PREFIX + "Alipay scenario amount: {}", amount);
-        return amount;
+        String scenario;
+        if (amount == 10.0) {
+            scenario = "success";
+        } else if (amount == 20.0) {
+            scenario = "failure";
+        } else if (amount == 30.0) {
+            scenario = "pending";
+        } else {
+            scenario = "success";
+        }
+        logger.info(SandboxConstants.LOG_PREFIX + "Alipay scenario for amount {}: {}", amount, scenario);
+        return scenario;
     }
 
     /**

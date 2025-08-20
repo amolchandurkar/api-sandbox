@@ -33,15 +33,15 @@ Refer to the Postman collection for request/response examples.
 
 ### How to Run Tests
 
-  ```shell
-  mvn clean test
-  ```
+```shell
+mvn clean test
+```
 
 If you are using Java 21, ensure you have the latest Mockito and Byte Buddy dependencies. If you encounter mocking errors, add the JVM property:
 
-  ```shell
-  mvn clean test -Dnet.bytebuddy.experimental=true
-  ```
+```shell
+mvn clean test -Dnet.bytebuddy.experimental=true
+```
 
 ### Test Coverage
 

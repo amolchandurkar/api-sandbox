@@ -23,17 +23,17 @@ class OrderSimulationServiceTest {
     }
 
     @Test
-    void testGetAmountForPaypal() {
+    void testGetScenarioForPaypal() {
         Map<String, Object> req = new HashMap<>();
-        when(paypalService.getAmountForScenario(req)).thenReturn(100.0);
-        assertEquals(100.0, orderService.getAmountForScenario(req, "paypal"));
+        when(paypalService.getScenarioForAmount(req)).thenReturn("success");
+        assertEquals("success", orderService.getScenarioForProvider(req, "paypal"));
     }
 
     @Test
-    void testGetAmountForAlipay() {
+    void testGetScenarioForAlipay() {
         Map<String, Object> req = new HashMap<>();
-        when(alipayService.getAmountForScenario(req)).thenReturn(200.0);
-        assertEquals(200.0, orderService.getAmountForScenario(req, "alipay"));
+        when(alipayService.getScenarioForAmount(req)).thenReturn("failure");
+        assertEquals("failure", orderService.getScenarioForProvider(req, "alipay"));
     }
 
     @Test

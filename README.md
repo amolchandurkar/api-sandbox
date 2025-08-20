@@ -1,6 +1,6 @@
 # Payment API Sandbox
 
-This example project simulates merchant payment order APIs for PayPal and Alipay using Java 21, Spring Boot, and WireMock. It is designed for integration testing in a sandbox environment, allowing you to test payment flows without connecting to real payment providers.
+This example project simulates merchant payment order APIs for PayPal and Alipay using Java 21, Spring Boot, and WireMock. It is designed for integration testing in a sandbox environment, allowing you to test API flows without connecting to real API Service providers. Alipay and PayPay are just use for example.
 
 ## Features
 

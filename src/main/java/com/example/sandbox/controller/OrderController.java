@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  * Example request:
  * {
  *   "scenario": "success",
- *   "amount": 100.0,
+ *   "amount": 10.0,
  *   "provider": "paypal"
  * }
  */
@@ -101,5 +101,4 @@ public class OrderController {
         return ResponseEntity.ok(response);
     }
 
-    // Business logic moved to OrderSimulationService
 }

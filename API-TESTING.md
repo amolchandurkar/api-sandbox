@@ -14,9 +14,9 @@ This sandbox simulates PayPal and Alipay order APIs for integration testing. It 
 
 Refer to the Postman collection for request/response examples.
 
-## How to Test Using Postman
+## How to Test Using Postman or Bruno
 
-1. Import `Payment-API-Sandbox.postman_collection.json` into Postman.
+1. Import `Payment API Sandbox.json.json` into Postman/Bruno.
 2. Set the base URL to `http://localhost:8080` (or your configured port).
 3. Use the provided requests to test PayPal, Alipay, and other endpoints.
 4. Review responses for scenario simulation, delays, and notifications.

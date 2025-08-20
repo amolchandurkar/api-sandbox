@@ -122,7 +122,7 @@
         },
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"scenario\": \"success\",\n  \"amount\": 200.0,\n  \"provider\": \"alipay\"\n}",
+          "raw": "{\n  \"amount\": 200.0,\n  \"provider\": \"alipay\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -164,7 +164,7 @@
         },
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"scenario\": \"success\",\n  \"amount\": 100.0,\n  \"provider\": \"paypal\"\n}",
+          "raw": "{\n  \"amount\": 100.0,\n  \"provider\": \"paypal\"\n}",
           "options": {
             "raw": {
               "language": "json"
